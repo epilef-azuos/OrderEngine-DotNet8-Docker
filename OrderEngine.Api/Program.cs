@@ -64,3 +64,6 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();
+
+// Permite que o WebApplicationFactory<Program> dos testes de integração acesse a API.
+public partial class Program { }
