@@ -1,0 +1,5 @@
+# Constituição: Regras Invioláveis de API e Aplicação
+
+1. **Controladores Anêmicos:** Um Controller na camada `Api` tem apenas 3 responsabilidades: Receber a requisição HTTP, despachar para o MediatR e retornar o StatusCode HTTP adequado baseado na resposta. Nenhuma regra de validação de negócio, manipulação de banco ou try/catch de domínio deve existir aqui.
+2. **Separação de Modelos:** A API nunca recebe e nunca retorna Entidades de Domínio. Use DTOs ou os próprios objetos de Command/Query para transitar dados de fora para dentro.
+3. **Isolamento de Idempotência:** A regra de checagem da chave de idempotência é um detalhe transversal (Cross-Cutting Concern) de infraestrutura/rede. Ela deve existir em um Filtro (ActionFilter) ou Middleware, e nunca dentro do Handler do MediatR ou do Controller.
