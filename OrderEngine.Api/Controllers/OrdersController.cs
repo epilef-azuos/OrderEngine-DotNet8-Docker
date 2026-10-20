@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OrderEngine.Api.Filters;
 using OrderEngine.Application.Commands.Orders;
+using OrderEngine.Application.Queries.Orders;
 
 namespace OrderEngine.Api.Controllers;
 
@@ -23,5 +24,13 @@ public class OrdersController : ControllerBase
         var orderId = await _mediator.Send(command, cancellationToken);
 
         return Accepted(orderId);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
+    {
+        var order = await _mediator.Send(new GetOrderByIdQuery(id), cancellationToken);
+
+        return order is null ? NotFound() : Ok(order);
     }
 }
