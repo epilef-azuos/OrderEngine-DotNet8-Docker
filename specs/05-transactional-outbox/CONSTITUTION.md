@@ -1,0 +1,5 @@
+# Constituição: Regras de Mensageria e Eventos
+
+1. **Proibição de Publicação Direta:** Sob nenhuma circunstância a camada `Application` ou `Api` pode injetar o `RabbitMqPublisher` para publicar mensagens diretamente. Tudo tem de passar pela tabela Outbox.
+2. **At-Least-Once Delivery:** O publicador em background (`OutboxBackgroundService`) não deve apagar mensagens da tabela Outbox, deve apenas preencher a data `ProcessedOn`. Se o serviço falhar (crash) no meio do envio, ele pode re-enviar a mensagem. A idempotência contra mensagens duplicadas será tratada no Consumidor (Worker) na Fase 06.
+3. **Escopo de Dependências:** Serviços em background (`BackgroundService`) são Singletons. Não se pode injetar um `DbContext` (Scoped) diretamente nele. Deve-se usar o `IServiceScopeFactory` para criar um escopo por iteração do job.

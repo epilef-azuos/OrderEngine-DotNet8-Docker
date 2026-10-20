@@ -3,7 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using OrderEngine.Api.Filters;
 using OrderEngine.Application.Commands.Orders;
 using OrderEngine.Application.Interfaces;
+using OrderEngine.Domain.Interfaces;
 using OrderEngine.Domain.Interfaces.Repositories;
+using OrderEngine.Infrastructure.BackgroundJobs;
+using OrderEngine.Infrastructure.Messaging;
 using OrderEngine.Infrastructure.Persistence;
 using OrderEngine.Infrastructure.Persistence.Queries;
 using OrderEngine.Infrastructure.Persistence.Repositories;
@@ -23,6 +26,12 @@ builder.Services.AddDbContext<OrderDbContext>(options =>
 
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderReadStore, OrderReadStore>();
+builder.Services.AddScoped<IOutboxRepository, OutboxRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddSingleton(new RabbitMqConnectionProvider(builder.Configuration.GetConnectionString("RabbitMq")!));
+builder.Services.AddSingleton<RabbitMqPublisher>();
+builder.Services.AddHostedService<OutboxBackgroundService>();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateOrderCommand).Assembly));
 

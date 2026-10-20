@@ -13,6 +13,8 @@ public class OrderDbContext : DbContext
 
     public DbSet<Payment> Payments => Set<Payment>();
 
+    public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrderDbContext).Assembly);
