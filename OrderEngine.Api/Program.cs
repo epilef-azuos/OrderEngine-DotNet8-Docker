@@ -2,9 +2,12 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using OrderEngine.Api.Filters;
 using OrderEngine.Application.Commands.Orders;
+using OrderEngine.Application.Interfaces;
 using OrderEngine.Domain.Interfaces.Repositories;
 using OrderEngine.Infrastructure.Persistence;
+using OrderEngine.Infrastructure.Persistence.Queries;
 using OrderEngine.Infrastructure.Persistence.Repositories;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,12 +22,21 @@ builder.Services.AddDbContext<OrderDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderReadStore, OrderReadStore>();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateOrderCommand).Assembly));
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
+});
+
+// AbortOnConnectFail = false: se o Redis estiver fora no startup, a API sobe e faz fallback para o banco.
+builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
+{
+    var options = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis")!);
+    options.AbortOnConnectFail = false;
+    return ConnectionMultiplexer.Connect(options);
 });
 
 builder.Services.AddScoped<IdempotencyFilterAttribute>();
