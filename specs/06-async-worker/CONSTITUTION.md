@@ -1,0 +1,5 @@
+# Constituição: Regras de Consumo e Workers
+
+1. **Gestão Própria de Escopo:** Tal como no *Outbox*, o Worker é um Singleton de vida longa. Não injetes o `DbContext` no construtor. Cria um escopo para cada mensagem recebida usando `IServiceScopeFactory`.
+2. **Reconhecimento Manual (Manual Ack):** O consumo do RabbitMQ não pode usar `autoAck: true`. O `BasicAck` só deve ser enviado após a transação na base de dados ser efetivada com sucesso. Em caso de falha severa, faz `BasicNack` para re-enfileirar ou enviar para uma DLQ (Dead Letter Queue).
+3. **Double-Spend Prevention (Idempotência do Consumidor):** O RabbitMQ garante a entrega *pelo menos uma vez*, não *exatamente uma vez*. Antes de processar, o Worker DEVE verificar se a mensagem já foi processada (usando o `IDistributedCache` do Redis com a chave do OrderId e um TTL longo).
