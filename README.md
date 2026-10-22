@@ -1,6 +1,6 @@
 # 🚀 Order & Payment Processing Engine
 
-![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![.NET](https://img.shields.io/badge/.NET-9.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
 ![RabbitMQ](https://img.shields.io/badge/RabbitMQ-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white)
@@ -18,7 +18,7 @@ Construído sob os princípios da **Clean Architecture** e **Domain-Driven Desig
 
 ## 🛠 Stack Tecnológica
 
-- **Backend:** C# com .NET 8 (Web API & Worker Services).
+- **Backend:** C# com .NET 9 (Web API & Worker Services).
 - **Arquitetura:** Clean Architecture, CQRS (via MediatR), DDD Tático.
 - **Persistência Relacional:** PostgreSQL + Entity Framework Core (Fluent API, Migrations).
 - **Cache & Concorrência:** Redis (StackExchange.Redis, IDistributedCache).
